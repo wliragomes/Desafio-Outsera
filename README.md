@@ -173,12 +173,6 @@ SQLite em memória, configurado no arquivo ApplicationDbContext.cs (camada Infra
 O arquivo CSV é carregado automaticamente ao iniciar a aplicação, mas também pode ser importado manualmente via endpoint.
 
 ## Autor
-**Nome: Washington de Lira Gomes
-**Contato: w.liragomes@yahoo.com.br
-**GitHub: wliragomes
-
-
-## Autor
 - Nome: Washington de Lira Gomes
 - Contato: w.liragomes@yahoo.com.br
 - GitHub: wliragomes
