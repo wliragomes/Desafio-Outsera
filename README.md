@@ -179,6 +179,6 @@ O arquivo CSV é carregado automaticamente ao iniciar a aplicação, mas também
 
 
 ## Autor
-- **Nome: Washington de Lira Gomes
-- **Contato: w.liragomes@yahoo.com.br
-- **GitHub: wliragomes
+- Nome: Washington de Lira Gomes
+- Contato: w.liragomes@yahoo.com.br
+- GitHub: wliragomes
