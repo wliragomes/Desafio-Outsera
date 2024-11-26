@@ -22,14 +22,23 @@ namespace Application.Services
             var producerIntervals = await _awardsQuery.GetProducersWithIntervalsAsync();
 
             if (producerIntervals == null || !producerIntervals.Any())
-                return null;
+            {
+                return new AwardsResponseDTO
+                {
+                    Min = new List<ProducerIntervalDTO>(),
+                    Max = new List<ProducerIntervalDTO>()
+                };
+            }
+
+            var minIntervalValue = producerIntervals.Min(p => p.Interval);
+            var maxIntervalValue = producerIntervals.Max(p => p.Interval);
 
             var minInterval = producerIntervals
-                .Where(x => x.Interval == producerIntervals.Min(p => p.Interval))
+                .Where(x => x.Interval == minIntervalValue)
                 .ToList();
 
             var maxInterval = producerIntervals
-                .Where(x => x.Interval == producerIntervals.Max(p => p.Interval))
+                .Where(x => x.Interval == maxIntervalValue)
                 .ToList();
 
             return new AwardsResponseDTO
@@ -41,26 +50,38 @@ namespace Application.Services
 
         public async Task LoadDataFromCsvAsync(string filePath)
         {
-            var lines = await File.ReadAllLinesAsync(filePath);
+            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+                throw new FileNotFoundException($"O arquivo {filePath} não foi encontrado.");
+
             var awardsList = new List<Award>();
 
-            foreach (var line in lines.Skip(1)) // Ignora o cabeçalho.
+            try
             {
-                var columns = line.Split(';');
-                if (columns.Length >= 5)
-                {
-                    awardsList.Add(new Award
-                    {
-                        Year = int.Parse(columns[0]),
-                        Title = columns[1],
-                        Studios = columns[2],
-                        Producers = columns[3],
-                        IsWinner = columns[4].Trim().ToLower() == "yes"
-                    });
-                }
-            }
+                var lines = await File.ReadAllLinesAsync(filePath);
 
-            await _awardsRepository.AddRangeAsync(awardsList);
+                foreach (var line in lines.Skip(1)) // Ignora o cabeçalho.
+                {
+                    var columns = line.Split(';');
+                    if (columns.Length >= 5 &&
+                        int.TryParse(columns[0], out int year))
+                    {
+                        awardsList.Add(new Award
+                        {
+                            Year = year,
+                            Title = columns[1],
+                            Studios = columns[2],
+                            Producers = columns[3],
+                            IsWinner = columns[4].Trim().ToLower() == "yes"
+                        });
+                    }
+                }
+
+                await _awardsRepository.AddRangeAsync(awardsList);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao processar o arquivo CSV.", ex);
+            }
         }
     }
 }

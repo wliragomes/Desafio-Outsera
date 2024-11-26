@@ -17,25 +17,46 @@ namespace Infra.Queries
         public async Task<List<ProducerIntervalDTO>?> GetProducersWithIntervalsAsync()
         {
             var awards = await _dbContext.Awards
-                .AsNoTracking() 
+                .AsNoTracking()
                 .Where(a => a.IsWinner)
                 .ToListAsync();
 
-            var producerIntervals = awards
-                .GroupBy(a => a.Producers)
-                .SelectMany(group =>
-                {
-                    var wins = group.OrderBy(a => a.Year).ToList();
-                    var intervals = new List<ProducerIntervalDTO>();
+            var producerAwards = new Dictionary<string, List<int>>();
 
-                    for (int i = 1; i < wins.Count; i++)
+            foreach (var award in awards)
+            {
+                var producers = award.Producers?
+                    .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                    .Select(p => p.Trim())
+                    .Where(p => !string.IsNullOrWhiteSpace(p));
+
+                if (producers == null) continue;
+
+                foreach (var producer in producers)
+                {
+                    if (!producerAwards.ContainsKey(producer))
+                        producerAwards[producer] = new List<int>();
+
+                    producerAwards[producer].Add(award.Year);
+                }
+            }
+
+            // Calcula os intervalos entre prêmios consecutivos
+            var producerIntervals = producerAwards
+                .SelectMany(pair =>
+                {
+                    var producer = pair.Key;
+                    var years = pair.Value.OrderBy(y => y).ToList();
+
+                    var intervals = new List<ProducerIntervalDTO>();
+                    for (int i = 1; i < years.Count; i++)
                     {
                         intervals.Add(new ProducerIntervalDTO
                         {
-                            Producer = group.Key,
-                            Interval = wins[i].Year - wins[i - 1].Year,
-                            PreviousWin = wins[i - 1].Year,
-                            FollowingWin = wins[i].Year
+                            Producer = producer,
+                            Interval = years[i] - years[i - 1],
+                            PreviousWin = years[i - 1],
+                            FollowingWin = years[i]
                         });
                     }
 
