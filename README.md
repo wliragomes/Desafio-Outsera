@@ -21,45 +21,47 @@ O projeto segue uma arquitetura em camadas para separar responsabilidades e faci
 ### Estrutura de Pastas
 
 Desafio-Outser
-### +---API
-### ---+---Properties
-### -------+---launchSettings.json
-### ---+---Controllers
-### --------+---AwardsController.cs
-### ---+---Data
-### -------+------movielist.csv
-### ---+---appsettings.json
-### -------+------appsettings.Development.json
-### ----+---Program.cs
-### +---Application
-### ---+---DTOs
-### -------+---AwardsResponseDTO.cs
-### -------+---ProducerIntervalDTO.cs
-### ---+---Interfaces
-### -------+------Queries
-### -----------+------IAwardsQuery.cs
-### --------+---IAwardsService.cs
-### ---+---Services
-### -------+------AwardsService.cs
-### +---Domain
-### ---+---Entities
-### -------+---Award.cs
-### ---+---Interfaces
-### -------+---IAwardsRepository.cs
-### +---Infra
-### ---+---Configuration
-### -------+---AwardsConfiguration.cs
-### ---+---Context
-### -------+---ApplicationDbContext.cs
-### ---+---IoC
-### -------+---DependencyInjectionApi.cs
-### ---+---Queries
-### -------+---AwardsQuery.cs
-### ---+---Repositories
-### -------+---AwardsRepository.cs
-### +---Tests
-### -------+---AwardsIntegrationTests.cs
-
+```javascript
+Desafio Outser
++-- API
+¦   +-- Properties
+¦   	+-- launchSettings.json
+¦   +-- Controllers
+¦		+-- AwardsController.cs
+¦   +-- Data
+¦   	+--	movielist.csv
+¦   +-- appsettings.json
+¦   	+--	appsettings.Development.json
+¦	+-- Program.cs
++-- Application
+¦   +-- DTOs
+¦   	+-- AwardsResponseDTO.cs
+¦   	+-- ProducerIntervalDTO.cs
+¦   +-- Interfaces
+¦   	+--	Queries
+¦   		+--	IAwardsQuery.cs
+¦		+-- IAwardsService.cs
+¦   +-- Services
+¦   	+--	AwardsService.cs
++-- Domain
+¦   +-- Entities
+¦   	+-- Award.cs
+¦   +-- Interfaces
+¦   	+-- IAwardsRepository.cs
++-- Infra
+¦   +-- Configuration
+¦   	+-- AwardsConfiguration.cs
+¦   +-- Context
+¦   	+-- ApplicationDbContext.cs
+¦   +-- IoC
+¦   	+-- DependencyInjectionApi.cs
+¦   +-- Queries
+¦   	+-- AwardsQuery.cs
+¦   +-- Repositories
+¦   	+-- AwardsRepository.cs
++-- Tests
+¦   	+-- AwardsIntegrationTests.cs
+```
 ---
 
 ## Pré-requisitos
@@ -96,7 +98,7 @@ GET /api/awards/producers/intervals
 Retorna os produtores com o maior e menor intervalo entre dois prêmios consecutivos.
 
 ## Exemplo de Resposta:
-
+```javascript
 {
   "min": [
     {
@@ -127,6 +129,7 @@ Retorna os produtores com o maior e menor intervalo entre dois prêmios consecut
     }
   ]
 }
+```
 
 ## 2. Importar Manualmente o CSV
 POST /api/awards/import
